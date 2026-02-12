@@ -3,8 +3,8 @@
 ## Setup (Railway)
 
 1. Add Environment Variables in Railway:
-   - `BOT_TOKEN` = Your Telegram Bot Token
-   - `GOLD_API_KEY` = Your GoldAPI.io Key
+   - `BOT_TOKEN` = 8055784009:AAEsDFRRaluwG0R7rwIjmyKhRnsxgPqfPGY
+   - `GOLD_API_KEY` =goldapi-d1e9smljjczw9-io
 
 2. Deploy project on Railway.
 
