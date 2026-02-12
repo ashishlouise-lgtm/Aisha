@@ -4,42 +4,54 @@ const axios = require('axios');
 const token = process.env.BOT_TOKEN;
 const goldApiKey = process.env.GOLD_API_KEY;
 
+if (!token) {
+  console.error("❌ BOT_TOKEN missing!");
+  process.exit(1);
+}
+
+if (!goldApiKey) {
+  console.error("❌ GOLD_API_KEY missing!");
+  process.exit(1);
+}
+
 const bot = new TelegramBot(token, { polling: true });
 
 bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(msg.chat.id,
-        "💎 Welcome to Raj Laxmi Jewellers 💎\n\nType:\n1️⃣ Gold Rate\n2️⃣ Silver Rate\n3️⃣ Talk to Owner");
+  bot.sendMessage(msg.chat.id,
+    "💎 Welcome to Raj Laxmi Jewellers 💎\n\nType:\n1️⃣ Gold Rate\n2️⃣ Silver Rate\n3️⃣ Talk to Owner");
 });
 
 bot.on('message', async (msg) => {
-    if (!msg.text) return;
+  if (!msg.text) return;
 
-    const text = msg.text.toLowerCase();
-    const chatId = msg.chat.id;
+  const text = msg.text.toLowerCase();
+  const chatId = msg.chat.id;
 
-    if (text === "1" || text.includes("gold")) {
-        try {
-            const response = await axios.get('https://www.goldapi.io/api/XAU/INR', {
-                headers: { 'x-access-token': goldApiKey }
-            });
-            bot.sendMessage(chatId, "📊 Live Gold Rate:\n₹" + response.data.price + " per ounce");
-        } catch (error) {
-            bot.sendMessage(chatId, "⚠ Unable to fetch gold rate right now.");
-        }
+  if (text === "1" || text.includes("gold")) {
+    try {
+      const response = await axios.get('https://www.goldapi.io/api/XAU/INR', {
+        headers: { 'x-access-token': goldApiKey }
+      });
+      bot.sendMessage(chatId, "📊 Live Gold Rate:\n₹" + response.data.price + " per ounce");
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      bot.sendMessage(chatId, "⚠ Unable to fetch gold rate.");
     }
+  }
 
-    else if (text === "2" || text.includes("silver")) {
-        try {
-            const response = await axios.get('https://www.goldapi.io/api/XAG/INR', {
-                headers: { 'x-access-token': goldApiKey }
-            });
-            bot.sendMessage(chatId, "🥈 Live Silver Rate:\n₹" + response.data.price + " per ounce");
-        } catch (error) {
-            bot.sendMessage(chatId, "⚠ Unable to fetch silver rate right now.");
-        }
+  else if (text === "2" || text.includes("silver")) {
+    try {
+      const response = await axios.get('https://www.goldapi.io/api/XAG/INR', {
+        headers: { 'x-access-token': goldApiKey }
+      });
+      bot.sendMessage(chatId, "🥈 Live Silver Rate:\n₹" + response.data.price + " per ounce");
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      bot.sendMessage(chatId, "⚠ Unable to fetch silver rate.");
     }
+  }
 
-    else if (text === "3" || text.includes("owner")) {
-        bot.sendMessage(chatId, "📞 Call: 8078619566\nOr send message here, we reply soon.");
-    }
+  else if (text === "3" || text.includes("owner")) {
+    bot.sendMessage(chatId, "📞 Call: 8078619566\nMessage us anytime.");
+  }
 });
